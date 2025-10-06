@@ -1,0 +1,117 @@
+@startuml ClassesTransporte
+
+' Contexto Solicitacao de Transporte
+package "Contexto Solicitacao de Transporte" {
+	class Cliente {
+	- id: int
+	- razao_social: str
+	- cnpj: str
+	- endereco: Endereco
+	}
+	class Produto {
+	- id: int
+	- nome: str
+	}
+	class Terminal {
+	- id: int
+	- nome: str
+	- endereco: Endereco
+	}
+	class Endereco {
+	- id: int
+	- rua: str
+	- cidade: str
+	- estado: str
+	- cep: str
+	}
+	class SolicitacaoTransporte {
+	- id: int
+	- cliente: Cliente
+	- produto: Produto
+	- quantidade: float
+	- terminal_origem: Terminal
+	- terminal_destino: Terminal
+	- data_produto_disponivel: date
+	- data_esperada_entrega: date
+	}
+	class SolicitacaoTransporteService {
+		+ criar_solicitacao(...): SolicitacaoTransporte
+	}
+}
+
+' Contexto Rota
+package "Contexto Rota" {
+	class Rota {
+	- id: int
+	- solicitacao: SolicitacaoTransporte
+	- terminais_intermediarios: List<Terminal>
+	- dutos_intermediarios: List[str]
+	- programador: Programador
+	}
+	class Programador {
+	- id: int
+	- nome: str
+	}
+	class RotaService {
+		+ calcular_rota(...): Rota
+	}
+	class Duto {
+	- id: int
+	- nome: str
+	- capacidade: float
+	- endereco_inicio: Endereco
+	- endereco_fim: Endereco
+	}
+}
+
+' Contexto Transporte
+package "Contexto Transporte" {
+	class Transporte {
+	- id: int
+	- rota: Rota
+	- etapa: str
+	- operador: Operador
+	}
+	class Operador {
+	- id: int
+	- nome: str
+	}
+	class TransporteService {
+		+ iniciar_transporte(...): Transporte
+	}
+}
+
+' Contexto Fatura
+package "Contexto Fatura" {
+	class Fatura {
+	- id: int
+	- transporte: Transporte
+	- valor: float
+	- data_emissao: date
+	- analista: AnalistaFaturamento
+	}
+	class AnalistaFaturamento {
+	- id: int
+	- nome: str
+	}
+	class FaturaService {
+		+ calcular_fatura(...): Fatura
+	}
+}
+
+Terminal --> Endereco
+Duto --> Endereco
+SolicitacaoTransporte --> Cliente
+SolicitacaoTransporte --> Produto
+SolicitacaoTransporte --> Terminal
+Cliente --> Endereco
+Rota --> SolicitacaoTransporte
+Rota --> Terminal
+Rota --> Duto
+Rota --> Programador
+Transporte --> Rota
+Transporte --> Operador
+Fatura --> Transporte
+Fatura --> AnalistaFaturamento
+
+@enduml

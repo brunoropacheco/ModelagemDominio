@@ -1,0 +1,13 @@
+@startuml MapaDeContextos
+
+(Solicitação de Transporte) as ST
+(Transporte) as T
+(Rota) as R
+(Faturamento) as F
+
+ST ---> R : Cliente Fornecedor
+R ---> T : Cliente Fornecedor
+T ---> F : Cliente Fornecedor
+R ---> ST : Cliente Fornecedor
+
+@enduml
